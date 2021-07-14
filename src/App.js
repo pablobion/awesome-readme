@@ -1,17 +1,13 @@
-import ReactMarkdown from "react-markdown";
-import "react-markdown-editor-lite/lib/index.css";
-
-import MdEditor from "./components/mdEditor/index";
+import MdEditor2 from "./components/uidMdEditor/index";
+import Menu from "./components/Menu/index";
 function App() {
     return (
-        <div className="App">
-            <header className="App-header">
-                <p>
-                    Edit <code>src/App.js</code> and save to reload.
-                </p>
-            </header>
-            <ReactMarkdown># Hello, *world*!</ReactMarkdown>
-            <MdEditor />
+        // flex items-center justify-between flex-wrap bg-teal-500 p-6
+        <div className="flex h-screen w-screen">
+            <Menu />
+            {/* <ReactMarkdown># Hello, *world*!</ReactMarkdown>
+            <MdEditor /> */}
+            <MdEditor2 />
         </div>
     );
 }
