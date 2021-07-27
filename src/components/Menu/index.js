@@ -1,44 +1,64 @@
-import tw from "tailwind-styled-components";
+import styled from "styled-components";
 
-const Container = tw.div`   
-    text-white
-    rounded-xl
-    p-4
-    mr-8
-    w-28
-    flex
-    flex-col
-    items-center
-    bg-opacity-25
-    backdrop-filter 
-    backdrop-blur-md
-    shadow-2xl
-    shadow-inner-2xl
-    bg-yellow-100
-    `;
+import { CgNotes } from "react-icons/cg";
 
-const Button = tw.div`   
-    bg-blue-900
-    px-4
-    py-2
-    rounded-xl
-    mb-2
-    border-b-4
-    border-blue-800
-    hover:bg-green-500 ease
-    transition duration-300
+import { useConfigs } from "../../context/contextProvider";
+
+const Container = styled.div`
+    background-color: white;
+    padding: 0.6rem;
+    border-radius: 1rem;
+    backdrop-filter: blur(4px) saturate(100%);
+    -webkit-backdrop-filter: blur(4px) saturate(100%);
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    box-shadow: 3px 5px 10px -7px black;
+    margin-right: 2rem;
+    width: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    #buttons-menu {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+`;
+
+const Button = styled.button`
+    padding: 0.8rem 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 2px 1px 3px rgba(0, 0, 0, 0.2);
+    color: white;
+    margin-bottom: 1rem;
+    border-radius: 1rem;
+    width: 100%;
 `;
 
 function Menu() {
-    return (
-        <Container>
-            <p>LOGO</p>
-            <Button className="mt-8">Home</Button>
-            <Button id="kkkk">Home</Button>
-            <Button>Home</Button>
-            <Button className="focus:bg-blue-200">Home</Button>
+    const { OpenAndCloseEditor } = useConfigs();
 
-            {/* <button className="text-green-800 cursor-pointer hover:bg-green-300 hover:text-white rounded p-2 border-b-4 border-green-200 hover:border-green-400">Option1</button> */}
+    return (
+        <Container className="">
+            <div id="buttons-menu">
+                <p>LOGO</p>
+                <Button>Repos</Button>
+                <Button id="kkkk">Profiles</Button>
+                <Button>Componentes</Button>
+                <Button>Comunity</Button>
+            </div>
+
+            <Button onClick={OpenAndCloseEditor}>
+                <CgNotes size={20} color="white" />
+            </Button>
         </Container>
     );
 }

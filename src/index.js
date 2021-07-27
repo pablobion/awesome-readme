@@ -1,11 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import "./index.css";
+import Styles from "./styles/global";
+
+import ConfigsProvider from "../src/context/contextProvider";
 
 ReactDOM.render(
     <React.StrictMode>
-        <App />
+        <ConfigsProvider>
+            <App />
+            <Styles />
+        </ConfigsProvider>
     </React.StrictMode>,
     document.getElementById("root")
 );

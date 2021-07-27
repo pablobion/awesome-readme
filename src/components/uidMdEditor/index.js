@@ -1,15 +1,14 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import MDEditor, { commands, ICommand } from "@uiw/react-md-editor";
 
 //styles
-import tw from "tailwind-styled-components";
+import styled from "styled-components";
 
 //custom
 import quote from "./CustomToolbar/quote";
 import table from "./CustomToolbar/table";
 
 //scripts
-import resize from "./scripts/moveAndResize";
 import interact from "interactjs";
 
 //ui
@@ -19,78 +18,97 @@ import { Button } from "@material-ui/core";
 import { MdClose } from "react-icons/md";
 import { VscChromeMinimize } from "react-icons/vsc";
 
+//contents
+import { useConfigs } from "../../context/contextProvider";
+
+const Container = styled.div`
+    width: 600px;
+    height: 550px;
+    padding: 0.5rem;
+    backdrop-filter: blur(4px) saturate(100%);
+    -webkit-backdrop-filter: blur(4px) saturate(100%);
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    box-shadow: 3px 5px 10px -7px black;
+    margin-right: 2rem;
+
+    #button-header {
+        display: flex;
+        justify-content: flex-end;
+    }
+`;
+
 function UidMdEditor() {
     const [value, setValue] = useState("**Hello world!!!**\n\n");
-    const [height, setHeight] = useState(495);
+    const [heightValue, setHeightValue] = useState(500);
+    const [visible, setVisible] = useState(true);
+    const { visibleModalMarkdownEditor, setVisibleModalMarkdownEditor } = useConfigs();
 
-    const [invisible, setInvisible] = useState(false);
+    interact(".draggable").draggable({
+        inertia: true,
+        modifiers: [
+            interact.modifiers.restrictRect({
+                restriction: "parent",
+                endOnly: true,
+            }),
+        ],
+        autoScroll: true,
 
-    interact(".draggable")
-        .draggable({
-            // enable inertial throwing
-            inertia: true,
-            // keep the element within the area of it's parent
-            modifiers: [
-                interact.modifiers.restrictRect({
-                    restriction: "parent",
-                    endOnly: true,
-                }),
-            ],
-            // enable autoScroll
-            autoScroll: true,
+        listeners: {
+            move: dragMoveListener,
+        },
+    });
+    interact(".resizable").resizable({
+        edges: { top: true, left: true, bottom: true, right: true },
+        listeners: {
+            move: function (event) {
+                let { x, y } = event.target.dataset;
+                if (event.rect.height < 200 || event.rect.width < 400) return false;
 
-            listeners: {
-                // call this function on every dragmove event
-                move: dragMoveListener,
+                x = (parseFloat(x) || 0) + event.deltaRect.left;
+                y = (parseFloat(y) || 0) + event.deltaRect.top;
 
-                // call this function on every dragend event
+                Object.assign(event.target.style, {
+                    width: `${event.rect.width}px`,
+                    height: `${event.rect.height}px`,
+                    transform: `translate(${x}px, ${y}px)`,
+                });
+
+                setHeightValue(event.rect.height - 50);
+
+                Object.assign(event.target.dataset, { x, y });
             },
-        })
-        .resizable({
-            edges: { top: true, left: true, bottom: true, right: true },
-            listeners: {
-                move: function (event) {
-                    Object.assign(event.target.style, {
-                        width: `${event.rect.width}px`,
-                        height: `${event.rect.height}px`,
-                    });
-
-                    const eventHeight = event.rect.height - 40;
-                    setHeight(eventHeight);
-                },
-            },
-        });
+        },
+    });
 
     function dragMoveListener(event) {
-        var target = event.target;
-        // var target = event.target.parentNode;
+        var target = event.target.parentNode;
 
-        // keep the dragged position in the data-x/data-y attributes
         var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
         var y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
 
-        // translate the element
         target.style.transform = "translate(" + x + "px, " + y + "px)";
 
-        // update the posiion attributes
         target.setAttribute("data-x", x);
         target.setAttribute("data-y", y);
     }
 
-    // this function is used later in the resizing and gesture demos
     window.dragMoveListener = dragMoveListener;
 
-    const Container = tw.div`draggable w-10/12 bg-yellow-100 h-5/6 px-1 rounded-lg bg-opacity-25 backdrop-filter backdrop-blur-md shadow-2xl shadow-inner-2xl
-    `;
-
     return (
-        <div className={`draggable w-10/12 bg-yellow-100 h-5/6 px-1 rounded-lg bg-opacity-25 backdrop-filter backdrop-blur-md shadow-2xl shadow-inner-2xl ${invisible ? "invisible" : ""}`}>
-            <div className="flex justify-end">
+        <Container className="resizable" style={{ visibility: visibleModalMarkdownEditor ? "visible" : "hidden" }}>
+            <div id="button-header" className="draggable">
                 <Button color="primary">
-                    <VscChromeMinimize size={25} color="white" />
+                    <VscChromeMinimize size={25} color="white" onClick={() => setVisible(false)} />
                 </Button>
                 <Button>
-                    <MdClose size={25} color="white" />
+                    <MdClose
+                        size={25}
+                        color="white"
+                        onClick={() => {
+                            setVisible(false);
+                        }}
+                    />
                 </Button>
             </div>
 
@@ -99,7 +117,8 @@ function UidMdEditor() {
                 value={value}
                 onChange={setValue}
                 visiableDragbar={false}
-                height={height}
+                height={heightValue}
+                style={{ backgroundColor: "white", borderRadius: "1rem" }}
                 commands={[
                     // Custom Toolbars
                     commands.group([commands.title1, commands.title2, commands.title3, commands.title4, commands.title5, commands.title6], {
@@ -119,7 +138,7 @@ function UidMdEditor() {
                     table,
                 ]}
             />
-        </div>
+        </Container>
     );
 }
 
