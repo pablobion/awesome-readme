@@ -31,6 +31,9 @@ const Container = styled.div`
     border-radius: 12px;
     box-shadow: 3px 5px 10px -7px black;
     margin-right: 2rem;
+    position: absolute;
+    left: 25%;
+    top: 5%;
 
     #button-header {
         display: flex;
@@ -41,8 +44,8 @@ const Container = styled.div`
 function UidMdEditor() {
     const [value, setValue] = useState("**Hello world!!!**\n\n");
     const [heightValue, setHeightValue] = useState(500);
-    const [visible, setVisible] = useState(true);
-    const { visibleModalMarkdownEditor, setVisibleModalMarkdownEditor } = useConfigs();
+
+    const { visibleModalMarkdownEditor, OpenAndCloseEditor } = useConfigs();
 
     interact(".draggable").draggable({
         inertia: true,
@@ -99,16 +102,10 @@ function UidMdEditor() {
         <Container className="resizable" style={{ visibility: visibleModalMarkdownEditor ? "visible" : "hidden" }}>
             <div id="button-header" className="draggable">
                 <Button color="primary">
-                    <VscChromeMinimize size={25} color="white" onClick={() => setVisible(false)} />
+                    <VscChromeMinimize size={25} color="white" onClick={OpenAndCloseEditor} />
                 </Button>
                 <Button>
-                    <MdClose
-                        size={25}
-                        color="white"
-                        onClick={() => {
-                            setVisible(false);
-                        }}
-                    />
+                    <MdClose size={25} color="white" onClick={OpenAndCloseEditor} />
                 </Button>
             </div>
 

@@ -7,14 +7,14 @@ export default function ConfigsProvider({ children }) {
 
     const OpenAndCloseEditor = () => setVisibleModalMarkdownEditor(!visibleModalMarkdownEditor);
 
-    return <ConfigsContext.Provider value={{ visibleModalMarkdownEditor, setVisibleModalMarkdownEditor, OpenAndCloseEditor }}>{children}</ConfigsContext.Provider>;
+    return <ConfigsContext.Provider value={{ visibleModalMarkdownEditor, OpenAndCloseEditor }}>{children}</ConfigsContext.Provider>;
 }
 
 export function useConfigs() {
     const context = useContext(ConfigsContext);
     if (!context) throw new Error("useCount must be used within a Provider");
 
-    const { visibleModalMarkdownEditor, setVisibleModalMarkdownEditor, OpenAndCloseEditor } = context;
+    const { visibleModalMarkdownEditor, OpenAndCloseEditor } = context;
 
-    return { visibleModalMarkdownEditor, setVisibleModalMarkdownEditor, OpenAndCloseEditor };
+    return { visibleModalMarkdownEditor, OpenAndCloseEditor };
 }

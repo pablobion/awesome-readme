@@ -1,5 +1,9 @@
 import MdEditor2 from "./components/uidMdEditor/index";
 import Menu from "./components/Menu/index";
+import Home from "./pages/home/index";
+
+//pages
+import Start from "./pages/Start/index";
 
 import styled from "styled-components";
 
@@ -22,7 +26,9 @@ function App() {
     return (
         <Container>
             <Menu />
+            <Home />
             <MdEditor2 />
+            {/* <Start /> */}
         </Container>
     );
 }
