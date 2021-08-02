@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import styled from "styled-components";
 
@@ -8,7 +8,6 @@ import { useConfigs } from "../../context/contextProvider";
 
 function Menu() {
     const { OpenAndCloseEditor } = useConfigs();
-    const [widthMenu, setWidthMenu] = useState(true);
 
     const Button = styled.button`
         padding: 0.8rem 0.5rem;
@@ -25,22 +24,23 @@ function Menu() {
     `;
 
     const Container = styled.div`
+        height: 97.5vh;
+        display: flex;
+    `;
+
+    const Menu = styled.div`
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
         background-color: white;
         padding: 0.6rem;
         border-radius: 1rem;
         backdrop-filter: blur(4px) saturate(100%);
         -webkit-backdrop-filter: blur(4px) saturate(100%);
         background-color: rgba(255, 255, 255, 0.2);
-        border-radius: 12px;
         box-shadow: 3px 5px 10px -7px black;
-        margin-right: 2rem;
-
-        transition: width 4s ease-in-out 1s;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        width: ${widthMenu}%;
+        height: 100%;
 
         #buttons-menu {
             display: flex;
@@ -50,22 +50,52 @@ function Menu() {
             width: 100%;
         }
     `;
+    const Submenu = styled.div`
+        width: 10px;
+        visibility: hidden;
+        transition: all 0.3s;
+        border-radius: 1rem;
+        backdrop-filter: blur(4px) saturate(100%);
+        -webkit-backdrop-filter: blur(4px) saturate(100%);
+        background-color: rgba(255, 255, 255, 0.8);
+        box-shadow: 3px 5px 10px -7px black;
+
+        &&.up {
+            width: 500px;
+            visibility: visible;
+            margin: 0rem 1rem;
+        }
+    `;
+
+    useEffect(() => {
+        var box = document.getElementById("box");
+        var submenu = document.getElementById("submenu");
+
+        box.addEventListener("mouseenter", function () {
+            submenu.classList.add("up");
+        });
+
+        submenu.addEventListener("mouseleave", function () {
+            submenu.classList.remove("up");
+        });
+    });
 
     return (
         <Container className="">
-            <div id="buttons-menu">
-                <p>LOGO</p>
-                <Button>Repos</Button>
-                <Button onMouseEnter={() => setWidthMenu(100)} onMouseLeave={() => setWidthMenu(10)}>
-                    Profiles
-                </Button>
-                <Button>Componentes</Button>
-                <Button>Comunity</Button>
-            </div>
+            <Menu>
+                <div id="buttons-menu">
+                    <p>LOGO</p>
+                    <Button>Repos</Button>
+                    <Button>Profiles</Button>
+                    <Button>Componentes</Button>
+                    <Button id="box">Comunity</Button>
+                </div>
 
-            <Button onClick={OpenAndCloseEditor}>
-                <CgNotes size={20} color="white" />
-            </Button>
+                <Button onClick={OpenAndCloseEditor}>
+                    <CgNotes size={20} color="white" />
+                </Button>
+            </Menu>
+            <Submenu id="submenu">asas</Submenu>
         </Container>
     );
 }

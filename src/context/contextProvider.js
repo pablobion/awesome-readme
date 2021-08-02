@@ -3,7 +3,7 @@ import React, { createContext, useState, useContext, useEffect, useRef } from "r
 export const ConfigsContext = createContext();
 
 export default function ConfigsProvider({ children }) {
-    const [visibleModalMarkdownEditor, setVisibleModalMarkdownEditor] = useState(true);
+    const [visibleModalMarkdownEditor, setVisibleModalMarkdownEditor] = useState(false);
 
     const OpenAndCloseEditor = () => setVisibleModalMarkdownEditor(!visibleModalMarkdownEditor);
 
